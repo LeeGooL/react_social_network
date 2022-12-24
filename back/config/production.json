@@ -1,0 +1,7 @@
+{
+	"port": "5000",
+	"autosign": false,
+	"user": { "id": 1 },
+	"NODE_ENV": "production",
+	"delay": 0
+}
