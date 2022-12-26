@@ -6,7 +6,7 @@ import { authenticated } from "./index.js";
 const friendshipRouter = express.Router();
 
 /**
- * GET /friendships
+ * GET /api/friendships
  * @tags Friendships
  * @summary Массив друзей
  * @return {array<User>} 200 - success response - application/json
@@ -22,7 +22,7 @@ friendshipRouter.get("/friendships", authenticated, async (req, res, next) => {
 });
 
 /**
- * DELETE /friendships/{id}
+ * DELETE /api/friendships/{id}
  * @tags Friendships
  * @summary Удалить друга
  * @param {string} id.path.required - id пользователя

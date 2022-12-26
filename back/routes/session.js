@@ -6,7 +6,7 @@ import { isEmail } from "../utils.js";
 const sessionRouter = express.Router();
 
 /**
- * GET /session
+ * GET /api/session
  * @tags Session
  * @summary Данные авторизованного пользователя
  * @return {User} 200 - success response - application/json
@@ -35,7 +35,7 @@ sessionRouter.get("/session", async (req, res, next) => {
  */
 
 /**
- * POST /signin
+ * POST /api/signin
  * @tags Session
  * @summary Авторизация
  * @param {SigninPayload} request.body.required
@@ -77,7 +77,7 @@ sessionRouter.post("/signin", receivers, async (req, res, next) => {
 });
 
 /**
- * POST /signout
+ * POST /api/signout
  * @tags Session
  * @summary Разлогинивание
  * @return 200 - success response

@@ -3,5 +3,5 @@
 	"autosign": true,
 	"user": { "id": 1 },
 	"NODE_ENV": "development",
-	"delay": 0
+	"delay": 500
 }
