@@ -13,7 +13,7 @@ const friendshipRequestsRouter = express.Router();
  */
 
 /**
- * GET /friendshipRequests
+ * GET /api/friendshipRequests
  * @tags Friendship Requests
  * @summary Массив заявок в друзья
  * @return {FriendshipRequest} 200 - success response - application/json
@@ -36,7 +36,7 @@ friendshipRequestsRouter.get(
 );
 
 /**
- * POST /friendshipRequests/{id}
+ * POST /api/friendshipRequests/{id}
  * @tags Friendship Requests
  * @summary Создать заявку в друзья (или принять при взаимной заявки)
  * @param {string} id.path.required - id пользователя
@@ -58,7 +58,7 @@ friendshipRequestsRouter.post(
 );
 
 /**
- * DELETE /friendshipRequests/{id}
+ * DELETE /api/friendshipRequests/{id}
  * @tags Friendship Requests
  * @summary Убрать заявку в друзья
  * @param {string} id.path.required - id пользователя

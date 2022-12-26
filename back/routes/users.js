@@ -19,7 +19,7 @@ const userRouter = express.Router();
  */
 
 /**
- * GET /users
+ * GET /api/users
  * @tags Users
  * @summary Массив пользователей
  * @return {array<User>} 200 - success response - application/json
@@ -45,7 +45,7 @@ userRouter.get("/users", async (req, res, next) => {
 });
 
 /**
- * GET /users/{id}
+ * GET /api/users/{id}
  * @tags Users
  * @summary Пользователь
  * @param {number} id.path - id пользователя
@@ -81,7 +81,7 @@ userRouter.get("/users/:id", async (req, res, next) => {
  */
 
 /**
- * POST /users
+ * POST /api/users
  * @tags Users
  * @summary Регистрация пользователя
  * @param {UserCreatePayload} request.body.required - Данные нового клиента
@@ -113,7 +113,7 @@ userRouter.post("/users", receivers, async (req, res, next) => {
  */
 
 /**
- * PATCH /users
+ * PATCH /api/users
  * @tags Users
  * @summary Обновление данных авторизованного пользователя
  * @param {UserUpdatePayload} request.body.required - Данные нового клиента
@@ -131,7 +131,7 @@ userRouter.patch("/users", authenticated, receivers, async (req, res, next) => {
 });
 
 /**
- * PATCH /users
+ * PATCH /api/users
  * @tags Users
  * @summary Обновление данных авторизованного пользователя
  * @param {UserUpdatePayload} request.body.required - Данные нового клиента

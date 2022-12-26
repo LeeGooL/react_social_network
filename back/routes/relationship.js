@@ -8,7 +8,7 @@ import { authenticated } from "./index.js";
 const relationshipRouter = express.Router();
 
 /**
- * GET /relationship/{userId}
+ * GET /api/relationship/{userId}
  * @tags Relationship
  * @param {number} userId.path.required - userId поста
  * @summary Отношвение к персонажу

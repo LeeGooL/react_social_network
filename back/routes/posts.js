@@ -19,7 +19,7 @@ const postRouter = express.Router();
  */
 
 /**
- * GET /posts/user/{userId}
+ * GET /api/posts/user/{userId}
  * @tags Posts
  * @summary Посты пользователя
  * @param {string} userId.path.required - id пользователя
@@ -46,7 +46,7 @@ postRouter.get("/posts/user/:userId", async (req, res, next) => {
  */
 
 /**
- * POST /posts/user/{userId}
+ * POST /api/posts/user/{userId}
  * @tags Posts
  * @summary Создать новый пост
  * @param {number} userId.path.required - id пользователя
@@ -80,7 +80,7 @@ postRouter.post(
  */
 
 /**
- * PATCH /posts/{postId}
+ * PATCH /api/posts/{postId}
  * @tags Posts
  * @summary Изменить содержимое поста
  * @param {number} postId.path.required - postId поста
@@ -114,7 +114,7 @@ postRouter.patch(
 );
 
 /**
- * DELETE /posts/{postId}
+ * DELETE /api/posts/{postId}
  * @tags Posts
  * @summary Удалить пост
  * @param {number} postId.path.required - postId поста
@@ -142,7 +142,7 @@ postRouter.delete("/posts/:postId", authenticated, async (req, res, next) => {
 });
 
 /**
- * PATCH /posts/like/{postId}
+ * PATCH /api/posts/like/{postId}
  * @tags Posts
  * @summary Поставить или снять лайк
  * @param {number} postId.path.required - postId поста

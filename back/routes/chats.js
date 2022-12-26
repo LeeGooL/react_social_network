@@ -17,7 +17,7 @@ const chatRouter = express.Router();
  */
 
 /**
- * GET /chats
+ * GET /api/chats
  * @tags Chats
  * @summary Пользователи с которыми есть переписка
  * @return {array<Message>} 200 - success response - application/json
@@ -33,7 +33,7 @@ chatRouter.get("/chats", authenticated, async (req, res, next) => {
 });
 
 /**
- * GET /chats/{id}
+ * GET /api/chats/{id}
  * @tags Chats
  * @summary Переписку с пользователем
  * @param {string} id.path.required - id пользователя
