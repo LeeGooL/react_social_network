@@ -1,7 +1,7 @@
 import MenuIcon from '@mui/icons-material/Menu';
-import { Container } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -19,7 +19,13 @@ export const MainBar = () => (
           Social network
         </Typography>
 
-        <Button color="inherit">Login</Button>
+        <Button component={Link} to="/users" color="inherit">
+          Users
+        </Button>
+
+        <Button component={Link} to="/login" color="inherit">
+          Login
+        </Button>
       </Toolbar>
     </Container>
   </AppBar>
