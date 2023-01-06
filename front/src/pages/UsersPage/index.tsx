@@ -14,7 +14,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { Link } from 'react-router-dom';
-import { useGetUsersQuery } from '../../redux/services/users';
+import { useGetUsersQuery } from 'src/redux/services/users';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
