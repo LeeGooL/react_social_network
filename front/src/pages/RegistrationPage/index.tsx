@@ -17,9 +17,9 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import TextField from '@mui/material/TextField';
 import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useFlag } from '../../hooks/useFlag';
-import { useCreateUserMutation } from '../../redux/services/users';
-import { isEmail } from '../../utils';
+import { useFlag } from 'src/hooks/useFlag';
+import { useCreateUserMutation } from 'src/redux/services/users';
+import { isEmail } from 'src/utils';
 
 interface FormState {
   email: string;
@@ -33,11 +33,11 @@ export const RegistrationPage = () => {
   const navigate = useNavigate();
 
   const [formState, setFormState] = useState<FormState>({
-    email: 'egor@gmail.com',
-    name: 'egor',
-    surname: 'burunkov',
-    password: '123',
-    passwordConfirmation: '123',
+    email: '',
+    name: '',
+    surname: '',
+    password: '',
+    passwordConfirmation: '',
   });
   const [isValidation, setIsValidation] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -71,7 +71,7 @@ export const RegistrationPage = () => {
 
     setFormState({ ...formState, password: '', passwordConfirmation: '' });
     setIsValidation(false);
-  }, [createUser, formState, navigate, regFlagApi.down]);
+  }, [createUser, formState, navigate, regFlagApi.up]);
 
   return (
     <Container sx={{ p: 2 }}>
