@@ -1,10 +1,12 @@
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { Alert, AlertTitle } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import Collapse from '@mui/material/Collapse';
 import Container from '@mui/material/Container';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
@@ -15,6 +17,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import TextField from '@mui/material/TextField';
 import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useFlag } from '../../hooks/useFlag';
 import { useCreateUserMutation } from '../../redux/services/users';
 import { isEmail } from '../../utils';
 
@@ -30,17 +33,19 @@ export const RegistrationPage = () => {
   const navigate = useNavigate();
 
   const [formState, setFormState] = useState<FormState>({
-    email: '',
-    name: '',
-    surname: '',
-    password: '',
-    passwordConfirmation: '',
+    email: 'egor@gmail.com',
+    name: 'egor',
+    surname: 'burunkov',
+    password: '123',
+    passwordConfirmation: '123',
   });
-  const [isValidation, setIsValidation] = useState<boolean>(false);
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState<boolean>(false);
+  const [isValidation, setIsValidation] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
 
-  const [createUser, { isLoading }] = useCreateUserMutation();
+  const regFlagApi = useFlag();
+
+  const [createUser, { isLoading, error }] = useCreateUserMutation();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleClickShowPasswordConfirmation = () => setShowPasswordConfirmation((show) => !show);
@@ -62,20 +67,11 @@ export const RegistrationPage = () => {
         alert('Пользователь успешно зарегистрирован');
         navigate('/login');
       })
-      .catch((error: any) => {
-        const message: string =
-          error &&
-          (typeof error === 'string'
-            ? error
-            : 'data' in error
-            ? JSON.stringify(error.data)
-            : 'message' in error
-            ? error.message
-            : 'Что-то не так!');
+      .catch(regFlagApi.up);
 
-        alert(message);
-      });
-  }, [createUser, formState, navigate]);
+    setFormState({ ...formState, password: '', passwordConfirmation: '' });
+    setIsValidation(false);
+  }, [createUser, formState, navigate, regFlagApi.down]);
 
   return (
     <Container sx={{ p: 2 }}>
@@ -83,6 +79,20 @@ export const RegistrationPage = () => {
         <CardHeader title="Регистрация нового пользователя" />
 
         <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Collapse in={regFlagApi.flag}>
+            <Alert severity="error" onClose={regFlagApi.down}>
+              <AlertTitle>Error</AlertTitle>
+              {error &&
+                (typeof error === 'string'
+                  ? error
+                  : 'data' in error
+                  ? JSON.stringify(error.data)
+                  : 'message' in error
+                  ? error.message
+                  : 'Что-то не так!')}
+            </Alert>
+          </Collapse>
+
           <TextField
             label="email"
             variant="outlined"
