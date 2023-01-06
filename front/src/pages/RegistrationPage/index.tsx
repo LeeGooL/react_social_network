@@ -1,19 +1,21 @@
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { FormHelperText } from '@mui/material';
-import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Container from '@mui/material/Container';
 import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import TextField from '@mui/material/TextField';
 import { ChangeEvent, useCallback, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useCreateUserMutation } from '../../redux/services/users';
 import { isEmail } from '../../utils';
 
 interface FormState {
@@ -25,6 +27,8 @@ interface FormState {
 }
 
 export const RegistrationPage = () => {
+  const navigate = useNavigate();
+
   const [formState, setFormState] = useState<FormState>({
     email: '',
     name: '',
@@ -35,6 +39,8 @@ export const RegistrationPage = () => {
   const [isValidation, setIsValidation] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showPasswordConfirmation, setShowPasswordConfirmation] = useState<boolean>(false);
+
+  const [createUser, { isLoading }] = useCreateUserMutation();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleClickShowPasswordConfirmation = () => setShowPasswordConfirmation((show) => !show);
@@ -49,9 +55,27 @@ export const RegistrationPage = () => {
     [formState],
   );
 
-  const registrationHandler = useCallback(() => {
-    console.log({ formState });
-  }, [formState]);
+  const registrationHandler = useCallback(async () => {
+    await createUser(formState)
+      .unwrap()
+      .then(() => {
+        alert('Пользователь успешно зарегистрирован');
+        navigate('/login');
+      })
+      .catch((error: any) => {
+        const message: string =
+          error &&
+          (typeof error === 'string'
+            ? error
+            : 'data' in error
+            ? JSON.stringify(error.data)
+            : 'message' in error
+            ? error.message
+            : 'Что-то не так!');
+
+        alert(message);
+      });
+  }, [createUser, formState, navigate]);
 
   return (
     <Container sx={{ p: 2 }}>
@@ -66,6 +90,7 @@ export const RegistrationPage = () => {
             required
             type="email"
             value={formState.email}
+            disabled={isLoading}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setFormState({ ...formState, email: e.target.value })}
             {...(isValidation &&
               !isEmail(formState.email) && {
@@ -80,6 +105,7 @@ export const RegistrationPage = () => {
             fullWidth
             required
             type="text"
+            disabled={isLoading}
             value={formState.name}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setFormState({ ...formState, name: e.target.value })}
             {...(isValidation &&
@@ -95,6 +121,7 @@ export const RegistrationPage = () => {
             fullWidth
             required
             type="text"
+            disabled={isLoading}
             value={formState.surname}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setFormState({ ...formState, surname: e.target.value })}
             {...(isValidation &&
@@ -111,6 +138,7 @@ export const RegistrationPage = () => {
               id="password"
               type={showPassword ? 'text' : 'password'}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setFormState({ ...formState, password: e.target.value })}
+              disabled={isLoading}
               value={formState.password}
               endAdornment={
                 <InputAdornment position="end">
@@ -142,6 +170,7 @@ export const RegistrationPage = () => {
                 setFormState({ ...formState, passwordConfirmation: e.target.value })
               }
               value={formState.passwordConfirmation}
+              disabled={isLoading}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
@@ -163,18 +192,20 @@ export const RegistrationPage = () => {
         </CardContent>
 
         <CardActions>
-          <Button
-            variant="contained"
-            fullWidth
-            disabled={!areAllFieldsNotEmpty || (isValidation && !isValidationOkay)}
+          <LoadingButton
             onClick={() => {
               setIsValidation(true);
 
               if (isValidationOkay) registrationHandler();
             }}
+            loading={isLoading}
+            loadingPosition="end"
+            variant="contained"
+            fullWidth
+            disabled={!areAllFieldsNotEmpty || (isValidation && !isValidationOkay) || isLoading}
           >
             Регистрация
-          </Button>
+          </LoadingButton>
         </CardActions>
       </Card>
     </Container>
