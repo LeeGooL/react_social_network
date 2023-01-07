@@ -2,9 +2,11 @@ import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 import { usersApi } from './services/users';
+import sessionReducer, { session } from './slices/session';
 
 export const store = configureStore({
   reducer: {
+    session: sessionReducer,
     [usersApi.reducerPath]: usersApi.reducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(usersApi.middleware),
@@ -15,3 +17,5 @@ export type AppDispatch = typeof store.dispatch;
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+
+store.dispatch(session());
