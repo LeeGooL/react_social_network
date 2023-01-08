@@ -1,10 +1,13 @@
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
+import Collapse from '@mui/material/Collapse';
 import Container from '@mui/material/Container';
 import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
@@ -16,15 +19,39 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/system/Box';
 import { ChangeEvent, useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useFlag } from 'src/hooks/useFlag';
+import { useAppDispatch, useAppSelector } from 'src/redux';
+import { signin } from 'src/redux/slices/session';
 import { isEmail } from 'src/utils';
 
 export const LoginPage = () => {
+  const dispatch = useAppDispatch();
+
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [formState, setFormState] = useState({ email: '', password: '' });
+  const [error, setError] = useState<string | null>(null);
+
+  const logApi = useFlag();
+
+  const { isLoadingSignIn } = useAppSelector((state) => state.session);
 
   const signinHandler = useCallback(() => {
-    console.log({ formState });
-  }, [formState]);
+    dispatch(signin(formState))
+      .unwrap()
+      .catch((error) => {
+        logApi.up();
+        setError(
+          typeof error === 'string'
+            ? error
+            : 'data' in error
+            ? JSON.stringify(error.data)
+            : 'message' in error
+            ? error.message
+            : 'Что-то не так!',
+        );
+      })
+      .finally(() => setFormState((state) => ({ ...state, password: '' })));
+  }, [dispatch, formState, logApi]);
 
   return (
     <Container sx={{ p: 2 }}>
@@ -49,6 +76,11 @@ export const LoginPage = () => {
             flexDirection: 'column',
             justifyContent: 'center',
           }}
+          onKeyDown={(e) => {
+            if (e.code === 'Enter') {
+              signinHandler();
+            }
+          }}
         >
           <CardContent sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
             <TextField
@@ -60,6 +92,7 @@ export const LoginPage = () => {
               }
               fullWidth
               type="text"
+              disabled={isLoadingSignIn}
             />
 
             <FormControl variant="outlined" fullWidth>
@@ -84,19 +117,29 @@ export const LoginPage = () => {
                   </InputAdornment>
                 }
                 label="Password"
+                disabled={isLoadingSignIn}
               />
             </FormControl>
+
+            <Collapse in={logApi.flag}>
+              <Alert severity="error" onClose={logApi.down}>
+                <AlertTitle>Error</AlertTitle>
+                <pre>{error}</pre>
+              </Alert>
+            </Collapse>
           </CardContent>
 
           <CardActions sx={{ pl: 3, pr: 3, display: 'flex', flexDirection: 'column' }}>
-            <Button
+            <LoadingButton
+              loading={isLoadingSignIn}
+              loadingPosition="end"
               fullWidth
               variant="contained"
               disabled={Object.values(formState).some((value) => !value.length) || !isEmail(formState.email)}
               onClick={signinHandler}
             >
-              Войти
-            </Button>
+              Регистрация
+            </LoadingButton>
 
             <Typography sx={{ mt: 2, textAlign: 'center' }}>
               или <Link to="/registration">зарегистрируйтесь</Link>
