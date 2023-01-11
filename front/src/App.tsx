@@ -1,9 +1,7 @@
 import { FC, useCallback } from 'react';
-import { Route, Routes } from 'react-router-dom';
-import { MainBar } from './components/MainBar';
-import { LoginPage } from './pages/LoginPage';
-import { RegistrationPage } from './pages/RegistrationPage';
-import { UsersPage } from './pages/UsersPage';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { MainBar } from './components';
+import { ChatsPage, FriendsPage, LoginPage, ProfilePage, RegistrationPage, SettingsPage, UsersPage } from './pages';
 import { useAppDispatch, useAppSelector } from './redux';
 import { signout } from './redux/slices/session';
 
@@ -21,10 +19,21 @@ export const App: FC = () => {
       <MainBar isAuthenticated={isAuthenticated} onSignout={onSignout} />
 
       <Routes>
-        <Route path="*" element={<p>Hello</p>} />
         <Route path="/users" element={<UsersPage />} />
-        <Route path="login" element={<LoginPage />} />
-        <Route path="registration" element={<RegistrationPage />} />
+        <Route path="/login" element={isAuthenticated ? <Navigate to="/profile" replace /> : <LoginPage />} />
+        <Route
+          path="/registration"
+          element={isAuthenticated ? <Navigate to="/profile" replace /> : <RegistrationPage />}
+        />
+
+        <Route path="/profile" element={isAuthenticated ? <ProfilePage /> : <LoginPage />} />
+        <Route path="/profile/:userId" element={<ProfilePage />} />
+
+        <Route path="/settings" element={isAuthenticated ? <SettingsPage /> : <Navigate to="/login" replace />} />
+        <Route path="/chats" element={isAuthenticated ? <ChatsPage /> : <Navigate to="/login" replace />} />
+        <Route path="/friends" element={isAuthenticated ? <FriendsPage /> : <Navigate to="/login" replace />} />
+
+        <Route path="*" element={isAuthenticated ? <ProfilePage /> : <LoginPage />} />
       </Routes>
     </>
   );

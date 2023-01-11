@@ -80,7 +80,7 @@ export const UsersPage = () => {
               {users && users.length ? (
                 users.map(({ id, name, surname, status, avatar }) => (
                   <ListItem key={id} sx={{ p: 0 }}>
-                    <ListItemButton component={Link} to={`/users/${id}`}>
+                    <ListItemButton component={Link} to={`/profile/${id}`}>
                       <ListItemAvatar>
                         <StyledBadge
                           overlap="circular"

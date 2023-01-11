@@ -138,7 +138,7 @@ export const LoginPage = () => {
               disabled={Object.values(formState).some((value) => !value.length) || !isEmail(formState.email)}
               onClick={signinHandler}
             >
-              Регистрация
+              Войти
             </LoadingButton>
 
             <Typography sx={{ mt: 2, textAlign: 'center' }}>
