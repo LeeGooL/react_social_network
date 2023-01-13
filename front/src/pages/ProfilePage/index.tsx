@@ -1,14 +1,24 @@
-import Card from '@mui/material/Card';
 import Container from '@mui/material/Container';
 import { FC } from 'react';
-import { SideMenu } from 'src/components';
+import { ProfileHeader } from 'src/components';
 
 export const ProfilePage: FC = () => {
   return (
     <Container sx={{ pt: 2 }}>
-      <Card>
+      {/* <Card>
         <SideMenu />
-      </Card>
+      </Card> */}
+
+      <ProfileHeader
+        user={{
+          name: 'Egor',
+          surname: 'Burunkov',
+          id: 1,
+          status: 'мой статус',
+          avatar: '',
+        }}
+        mode="friend"
+      />
     </Container>
   );
 };
