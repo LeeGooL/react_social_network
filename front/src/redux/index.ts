@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import { relationshipApi } from './services/relationship';
 
 import { usersApi } from './services/users';
 import sessionReducer, { session } from './slices/session';
@@ -7,9 +8,11 @@ import sessionReducer, { session } from './slices/session';
 export const store = configureStore({
   reducer: {
     session: sessionReducer,
+    [relationshipApi.reducerPath]: relationshipApi.reducer,
     [usersApi.reducerPath]: usersApi.reducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(usersApi.middleware),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(usersApi.middleware).concat(relationshipApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

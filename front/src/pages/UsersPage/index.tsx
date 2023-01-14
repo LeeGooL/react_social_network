@@ -47,62 +47,77 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 export const UsersPage = () => {
-  const { data: users, isLoading, isSuccess, error, isError } = useGetUsersQuery();
+  const { data: users, isLoading, isSuccess /*,  error */ } = useGetUsersQuery();
+
+  if (isLoading || !isSuccess) {
+    return (
+      <Container sx={{ p: 2 }}>
+        <Card>
+          <CardHeader title="Загрузка..." />
+          <CardContent sx={{ p: 0 }}>
+            <Box justifyContent="center" display="flex">
+              <CircularProgress />
+            </Box>
+          </CardContent>
+        </Card>
+      </Container>
+    );
+  }
+
+  if (!users) {
+    return (
+      <Container sx={{ p: 2 }}>
+        <Card>
+          <CardContent>
+            <Typography>Что-то пошло не так!</Typography>
+            {/* <pre>
+              {error &&
+                (typeof error === 'string'
+                  ? error
+                  : 'data' in error
+                  ? JSON.stringify(error.data)
+                  : 'message' in error
+                  ? error.message
+                  : 'Что-то не так!')}
+            </pre> */}
+          </CardContent>
+        </Card>
+      </Container>
+    );
+  }
 
   return (
     <Container sx={{ p: 2 }}>
       <Card>
-        <CardHeader title={isLoading || !isSuccess ? 'Загрузка...' : 'Пользователи:'} />
+        <CardHeader title="Пользователи:" />
 
         <CardContent sx={{ p: 0 }}>
-          {(isError || !users) && !isLoading && !isSuccess && (
-            <>
-              <Typography>Что-то пошло не так!</Typography>
-              <pre>
-                {error &&
-                  (typeof error === 'string'
-                    ? error
-                    : 'data' in error
-                    ? JSON.stringify(error.data)
-                    : 'message' in error
-                    ? error.message
-                    : 'Что-то не так!')}
-              </pre>
-            </>
-          )}
-
-          {isLoading || !isSuccess ? (
-            <Box justifyContent="center" display="flex">
-              <CircularProgress />
-            </Box>
-          ) : (
-            <List sx={{ p: 0 }} dense>
-              {users && users.length ? (
-                users.map(({ id, name, surname, status, avatar }) => (
-                  <ListItem key={id} sx={{ p: 0 }}>
-                    <ListItemButton component={Link} to={`/profile/${id}`}>
-                      <ListItemAvatar>
-                        <StyledBadge
-                          overlap="circular"
-                          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                          variant="dot"
-                        >
-                          <Avatar src={avatar} variant="rounded" sx={{ width: '40px' }} />
-                        </StyledBadge>
-                      </ListItemAvatar>
-                      <ListItemText primary={`${name} ${surname}`} secondary={status} />
-                    </ListItemButton>
-                  </ListItem>
-                ))
-              ) : (
-                <Box justifyContent="center" display="flex">
-                  <Typography>
-                    Пользователей еще нет. Стань <Link to="/registration">первым</Link>!
-                  </Typography>
-                </Box>
-              )}
-            </List>
-          )}
+          <List sx={{ p: 0 }} dense>
+            {users && users.length ? (
+              users.map(({ id, name, surname, status, avatar }) => (
+                <ListItem key={id} sx={{ p: 0 }}>
+                  <ListItemButton component={Link} to={`/profile/${id}`}>
+                    <ListItemAvatar>
+                      <StyledBadge
+                        overlap="circular"
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                        variant="dot"
+                      >
+                        <Avatar src={avatar} variant="rounded" sx={{ width: '40px' }} />
+                      </StyledBadge>
+                    </ListItemAvatar>
+                    <ListItemText primary={`${name} ${surname}`} secondary={status} />
+                  </ListItemButton>
+                </ListItem>
+              ))
+            ) : (
+              <Box justifyContent="center" display="flex">
+                <Typography>
+                  Пользователей еще нет. Стань <Link to="/registration">первым</Link>!
+                </Typography>
+              </Box>
+            )}
+          </List>
         </CardContent>
       </Card>
     </Container>
