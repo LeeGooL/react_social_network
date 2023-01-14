@@ -56,7 +56,7 @@ export const signout = createAsyncThunk<UserDataType, void>('session/signout', a
   return rejectWithValue(await response.text());
 });
 
-const getInitialState = () => ({
+const getInitialState: () => SessionState = () => ({
   isLoadingSession: false,
   isLoadingSignIn: false,
   isAuthenticated: false,

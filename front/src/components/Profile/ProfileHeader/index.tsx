@@ -1,7 +1,6 @@
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { FC } from 'react';
@@ -53,7 +52,7 @@ export const ProfileHeader: FC<ProfileHeaderProps> = ({
   onRemove = () => {},
 }) => {
   return (
-    <Card sx={{ p: 3, display: 'flex' }}>
+    <>
       <Box>
         <StyledBadge overlap="rectangular" anchorOrigin={{ vertical: 'top', horizontal: 'right' }} variant="dot">
           <Avatar alt="" src="/sets/avatar.png" variant="square" sx={{ width: 200, height: 200 }} />
@@ -70,6 +69,6 @@ export const ProfileHeader: FC<ProfileHeaderProps> = ({
 
         <ProfileActionBar mode={mode} onRequest={onRequest} onRevoke={onRevoke} onRemove={onRemove} />
       </Box>
-    </Card>
+    </>
   );
 };
