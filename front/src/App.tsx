@@ -1,5 +1,5 @@
 import { FC, useCallback } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { MainBar } from './components';
 import { ChatsPage, FriendsPage, LoginPage, ProfilePage, RegistrationPage, SettingsPage, UsersPage } from './pages';
 import { useAppDispatch, useAppSelector } from './redux';
@@ -7,12 +7,14 @@ import { signout } from './redux/slices/session';
 
 export const App: FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const { isAuthenticated } = useAppSelector((state) => state.session);
 
   const onSignout = useCallback(() => {
     dispatch(signout());
-  }, [dispatch]);
+    navigate('/profile')
+  }, [dispatch, navigate]);
 
   return (
     <>

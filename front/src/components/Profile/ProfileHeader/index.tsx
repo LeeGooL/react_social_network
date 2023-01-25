@@ -5,6 +5,8 @@ import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { FC } from 'react';
 import { ProfileActionBar } from 'src/components';
+import { useRemoveFriendMutation } from 'src/redux/services/friendships';
+import { useCreateRequestMutation, useRevokeRequestMutation } from 'src/redux/services/frientshipRequests';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -39,18 +41,13 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 interface ProfileHeaderProps {
   user: UserDataType;
   mode: 'guest' | 'own' | 'user' | 'friend' | 'request';
-  onRequest?: () => void;
-  onRevoke?: () => void;
-  onRemove?: () => void;
 }
 
-export const ProfileHeader: FC<ProfileHeaderProps> = ({
-  user: { name, surname, status },
-  mode,
-  onRequest = () => {},
-  onRevoke = () => {},
-  onRemove = () => {},
-}) => {
+export const ProfileHeader: FC<ProfileHeaderProps> = ({ user: { name, surname, status, id }, mode }) => {
+  const [createRequest, { isLoading: isCreateRequestLoading }] = useCreateRequestMutation();
+  const [revokeRequest, { isLoading: isRevokeRequestLoading }] = useRevokeRequestMutation();
+  const [removeFriend, { isLoading: isRemoveFriendLoading }] = useRemoveFriendMutation();
+
   return (
     <>
       <Box>
@@ -67,7 +64,25 @@ export const ProfileHeader: FC<ProfileHeaderProps> = ({
           {status}
         </Typography>
 
-        <ProfileActionBar mode={mode} onRequest={onRequest} onRevoke={onRevoke} onRemove={onRemove} />
+        <ProfileActionBar
+          mode={mode}
+          onRequest={() =>
+            createRequest(id)
+              .unwrap()
+              .finally(() => window.location.reload())
+          }
+          onRevoke={() =>
+            revokeRequest(id)
+              .unwrap()
+              .finally(() => window.location.reload())
+          }
+          onRemove={() =>
+            removeFriend(id)
+              .unwrap()
+              .finally(() => window.location.reload())
+          }
+          isLoading={isCreateRequestLoading || isRevokeRequestLoading || isRemoveFriendLoading}
+        />
       </Box>
     </>
   );
