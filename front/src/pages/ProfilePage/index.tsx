@@ -40,7 +40,7 @@ export const ProfilePage: FC = () => {
       return 'guest';
     }
 
-    if (relationship.hasRequestFrom) return 'request';
+    if (relationship.hasRequestTo) return 'request';
     if (relationship.isFriend) return 'friend';
     if (relationship.isOwn) return 'own';
 
